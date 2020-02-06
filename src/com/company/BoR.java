@@ -80,7 +80,7 @@ public class BoR {
         } while (!input.equals("stop"));
     } //runs game loop
     
-    public static int spin() {
+    public int spin() {
         int[][] rolledSymbols = createArray();
         int comboCounter = 0;
         int wertChecker = 0;
