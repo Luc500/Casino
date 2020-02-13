@@ -5,15 +5,15 @@ import java.util.Scanner;
 
 public class BoR {
     int stake;
-    
+
     public BoR() {
         this.stake = 1;
     }
-    
+
     public void changeStake(int newStake) {
         this.stake = newStake;
     }
-    
+
     public void runGame(int credit, BoR currentGame) {
         String input;
         Scanner sc = new Scanner(System.in);
@@ -23,63 +23,70 @@ public class BoR {
         int stakeReturn = 0;        //for
         int freegameCounter = 12;   //freegames
         int spinCounter = 0;
-        
+
         System.out.println("Welcome!");
         welcomeMsg(credit, currentGame, spinCounter);
         do {
             input = sc.next();
-            
+
             if (input.equals("spin") || input.equals("s")) {
                 //while (spinCounter < 50000) {
-                    spinCounter++;
-                    multiplier = currentGame.spin();                //returns if won and if so how much
-                    credit += currentGame.stake * multiplier * bookmultiplier + stakeReturn;    //sets new credit
-                    
-                    //Won Book of Ra
-                    if (multiplier > 9999) {
-                        System.out.println(cColor.CYAN + "BOOK OF RA!!!" + cColor.RESET + "Your next 10 games will be free and every win will get multiplied by 5!!!");
-                        bookmultiplier = 5;
-                        stakeReturn = currentGame.stake;
-                        freegameCounter = 0;
-                        credit = origCredit;
+                spinCounter++;
+                multiplier = currentGame.spin();                //returns if won and if so how much
+                credit += currentGame.stake * multiplier * bookmultiplier + stakeReturn;    //sets new credit
+
+                //Won Book of Ra
+                if (multiplier > 9999) {
+                    System.out.println(cColor.CYAN + "BOOK OF RA!!!" + cColor.RESET +
+                            "Your next 10 games will be free and every win will get multiplied by 5!!!");
+                    bookmultiplier = 5;
+                    stakeReturn = currentGame.stake;
+                    freegameCounter = 0;
+                    credit = origCredit;
                     //Won something
-                    } else if (multiplier > 1) {
-                        System.out.println("\nYou won " + cColor.CYAN + (credit - origCredit - stakeReturn) + "€" + cColor.RESET + "! Congratulations!\n");
+                } else if (multiplier > 1) {
+                    System.out.println(
+                            "\nYou won " + cColor.CYAN + (credit - origCredit - stakeReturn) + "€" + cColor.RESET +
+                                    "! Congratulations!\n");
                     //Won stake back during Book of Ra, so multiplied by 5
-                    } else if (multiplier == 1 && freegameCounter < 11) {
-                        System.out.println("\nYou won " + cColor.CYAN + currentGame.stake * bookmultiplier + "€!" + cColor.RESET + "Congratulations!");
+                } else if (multiplier == 1 && freegameCounter < 11) {
+                    System.out.println(
+                            "\nYou won " + cColor.CYAN + currentGame.stake * bookmultiplier + "€!" + cColor.RESET +
+                                    "Congratulations!");
                     //Won stake back
-                    } else if (multiplier == 1) {
-                        System.out.println("\nYou won your stake back! " + cColor.CYAN + "Try again!\n" + cColor.RESET);
-                        credit -= currentGame.stake;
+                } else if (multiplier == 1) {
+                    System.out.println("\nYou won your stake back! " + cColor.CYAN + "Try again!\n" + cColor.RESET);
+                    credit -= currentGame.stake;
                     //didn´t win nuthing
-                    } else {
-                        System.out.println("\nSadly, you didn´t win this time! " + cColor.CYAN + "Better luck next time!\n" + cColor.RESET);
-                        credit -= currentGame.stake;
-                    }
-                    welcomeMsg(credit, currentGame, spinCounter);
-                    origCredit = credit;
-                    freegameCounter++;
-                    //detects end of the freegames
-                    if (freegameCounter == 11) {
-                        System.out.println(cColor.RED + "NO MORE FREEGAMES" + cColor.RESET);
-                        stakeReturn = 0;
-                        bookmultiplier = 1;
-                    }
+                } else {
+                    System.out.println(
+                            "\nSadly, you didn´t win this time! " + cColor.CYAN + "Better luck next time!\n" +
+                                    cColor.RESET);
+                    credit -= currentGame.stake;
+                }
+                welcomeMsg(credit, currentGame, spinCounter);
+                origCredit = credit;
+                freegameCounter++;
+                //detects end of the freegames
+                if (freegameCounter == 11) {
+                    System.out.println(cColor.RED + "NO MORE FREEGAMES" + cColor.RESET);
+                    stakeReturn = 0;
+                    bookmultiplier = 1;
+                }
                 //}
-            //changes the stake
+                //changes the stake
             } else if (input.equals("stake")) {
                 System.out.println("New stake: ");
                 currentGame.changeStake(sc.nextInt());
                 welcomeMsg(credit, currentGame, spinCounter);
-            //catches invalid inputs
+                //catches invalid inputs
             } else if (!input.equals("stop")) {
                 System.out.println(cColor.RED + "no valid input" + cColor.RESET);
                 welcomeMsg(credit, currentGame, spinCounter);
             }
         } while (!input.equals("stop"));
     } //runs game loop
-    
+
     public int spin() {
         int[][] rolledSymbols = createArray();
         int comboCounter = 0;
@@ -88,7 +95,7 @@ public class BoR {
         boolean[][] winningSym = new boolean[5][3];
         boolean[][] finalWS;
         int bookCounter = 0;
-        
+
         //region books          //checks for books in the whole array if it finds 3 it returns immediately
         for (int i = 0; i < rolledSymbols.length; i++) {
             for (int j = 0; j < rolledSymbols[i].length; j++) {
@@ -129,7 +136,7 @@ public class BoR {
         comboCounter = 0;       //resets tracking variabes for new line
         wertChecker = 0;
         resetBool(winningSym);
-        
+
         for (int i = 0; i < rolledSymbols.length - 1; i++) {
             if (rolledSymbols[i][1] == rolledSymbols[i + 1][1]) {
                 comboCounter++;
@@ -143,7 +150,7 @@ public class BoR {
                     wertChecker = 0;
                     resetBool(winningSym);
                 }
-                
+
             }
         }
         if (finalMultiplier < multiplier(comboCounter, wertChecker)) {
@@ -155,7 +162,7 @@ public class BoR {
         comboCounter = 0;
         wertChecker = 0;
         resetBool(winningSym);
-        
+
         for (int i = 0; i < rolledSymbols.length - 1; i++) {
             if (rolledSymbols[i][2] == rolledSymbols[i + 1][2]) {
                 comboCounter++;
@@ -179,9 +186,10 @@ public class BoR {
         //region Gewinnlinie4
         comboCounter = 0;
         wertChecker = 0;
-        boolean checkContinuity = false;        //line needs multiple if´s, acts as entry barrier if previous symbols were already false
+        boolean checkContinuity =
+                false;        //line needs multiple if´s, acts as entry barrier if previous symbols were already false
         resetBool(winningSym);
-        
+
         if (rolledSymbols[0][0] == rolledSymbols[1][1]) {
             comboCounter++;
             wertChecker += rolledSymbols[0][0];
@@ -213,7 +221,7 @@ public class BoR {
             winningSym[3][1] = true;
             winningSym[4][2] = true;
         }
-        
+
         if (finalMultiplier < multiplier(comboCounter, wertChecker)) {
             finalMultiplier = multiplier(comboCounter, wertChecker);
             finalWS = boolDeepClone(winningSym);
@@ -224,7 +232,7 @@ public class BoR {
         wertChecker = 0;
         checkContinuity = false;
         resetBool(winningSym);
-        
+
         if (rolledSymbols[0][2] == rolledSymbols[1][1]) {
             comboCounter++;
             wertChecker += rolledSymbols[0][2];
@@ -261,10 +269,169 @@ public class BoR {
             finalWS = boolDeepClone(winningSym);
         }
         //endregion
+        //region Gewinnlinie 6
+        comboCounter = 0;
+        wertChecker = 0;
+        resetBool(winningSym);
+        int yAchse = 2;     //line has pyramid form, checks when it reaches peak
+
+        for (int i = 0; i < rolledSymbols.length - 1; i++) {
+            if (yAchse > 0) {
+                if (rolledSymbols[i][yAchse] == rolledSymbols[i + 1][yAchse - 1]) {
+                    comboCounter++;
+                    wertChecker += rolledSymbols[i][yAchse];
+                    winningSym[i][yAchse] = true;
+                    winningSym[i + 1][yAchse - 1] = true;
+                    yAchse--;
+                } else {
+                    i += rolledSymbols.length - 1 - i;
+                    if (comboCounter < 2 && wertChecker < 6 || comboCounter < 2 && wertChecker > 7) {
+                        comboCounter = 0;
+                        wertChecker = 0;
+                        resetBool(winningSym);
+                    }
+                }
+            } else {
+                if (rolledSymbols[i][yAchse] == rolledSymbols[i + 1][yAchse + 1]) {
+                    comboCounter++;
+                    wertChecker += rolledSymbols[i][yAchse];
+                    winningSym[i][yAchse] = true;
+                    winningSym[i + 1][yAchse + 1] = true;
+                    yAchse++;
+                }
+            }
+        }
+        if (finalMultiplier < multiplier(comboCounter, wertChecker)) {
+            finalMultiplier = multiplier(comboCounter, wertChecker);
+            finalWS = boolDeepClone(winningSym);
+        }
+        //endregion
+        //region Gewinnlinie 7
+        comboCounter = 0;
+        wertChecker = 0;
+        resetBool(winningSym);
+        yAchse = 0;
+
+        for (int i = 0; i < rolledSymbols.length - 1; i++) {
+            if (yAchse < 2) {
+                if (rolledSymbols[i][yAchse] == rolledSymbols[i + 1][yAchse + 1]) {
+                    comboCounter++;
+                    wertChecker += rolledSymbols[i][yAchse];
+                    winningSym[i][yAchse] = true;
+                    winningSym[i + 1][yAchse + 1] = true;
+                    yAchse++;
+                } else {
+                    i += rolledSymbols.length - 1 - i;
+                    if (comboCounter < 2 && wertChecker < 6 || comboCounter < 2 && wertChecker > 7) {
+                        comboCounter = 0;
+                        wertChecker = 0;
+                        resetBool(winningSym);
+                    }
+                }
+            } else {
+                if (rolledSymbols[i][yAchse] == rolledSymbols[i + 1][yAchse -1]) {
+                    comboCounter++;
+                    wertChecker += rolledSymbols[i][yAchse];
+                    winningSym[i][yAchse] = true;
+                    winningSym[i + 1][yAchse - 1] = true;
+                    yAchse--;
+                }
+            }
+        }
+        if (finalMultiplier < multiplier(comboCounter, wertChecker)) {
+            finalMultiplier = multiplier(comboCounter, wertChecker);
+            finalWS = boolDeepClone(winningSym);
+        }
+        //endregion
+        //region Gewinnlinie 8
+        comboCounter = 0;
+        wertChecker = 0;
+        checkContinuity = false;
+        resetBool(winningSym);
+
+        if (rolledSymbols[0][1] == rolledSymbols[1][0]) {
+            comboCounter++;
+            wertChecker += rolledSymbols[0][1];
+            winningSym[0][1] = true;
+            winningSym[1][0] = true;
+            checkContinuity = true;
+        }
+        if (checkContinuity) {
+            for (int i = 1; i < 3; i++) {
+                if (rolledSymbols[i][0] == rolledSymbols[i + 1][0]) {
+                    comboCounter++;
+                    wertChecker += rolledSymbols[i][0];
+                    winningSym[i][0] = true;
+                    winningSym[i + 1][0] = true;
+                } else {
+                    i += rolledSymbols.length - 1 - i;
+                    checkContinuity = false;
+                    if (comboCounter < 2 && wertChecker < 6 || comboCounter < 2 && wertChecker > 7) {
+                        comboCounter = 0;
+                        wertChecker = 0;
+                        resetBool(winningSym);
+                    }
+                }
+            }
+        }
+        if (checkContinuity && rolledSymbols[3][0] == rolledSymbols[4][1]) {
+            comboCounter++;
+            wertChecker += rolledSymbols[3][0];
+            winningSym[3][0] = true;
+            winningSym[4][1] = true;
+        }
+        if (finalMultiplier < multiplier(comboCounter, wertChecker)) {
+            finalMultiplier = multiplier(comboCounter, wertChecker);
+            finalWS = boolDeepClone(winningSym);
+        }
+        //endregion
+        //region Gewinnlinie 9
+        comboCounter = 0;
+        wertChecker = 0;
+        checkContinuity = false;
+        resetBool(winningSym);
+
+        if (rolledSymbols[0][1] == rolledSymbols[1][2]) {
+            comboCounter++;
+            wertChecker += rolledSymbols[0][1];
+            winningSym[0][1] = true;
+            winningSym[1][2] = true;
+            checkContinuity = true;
+        }
+        if (checkContinuity) {
+            for (int i = 1; i < 3; i++) {
+                if (rolledSymbols[i][2] == rolledSymbols[i + 1][2]) {
+                    comboCounter++;
+                    wertChecker += rolledSymbols[i][2];
+                    winningSym[i][2] = true;
+                    winningSym[i + 1][2] = true;
+                } else {
+                    i += rolledSymbols.length - 1 - i;
+                    checkContinuity = false;
+                    if (comboCounter < 2 && wertChecker < 6 || comboCounter < 2 && wertChecker > 7) {
+                        comboCounter = 0;
+                        wertChecker = 0;
+                        resetBool(winningSym);
+                    }
+                }
+            }
+        }
+        if (checkContinuity && rolledSymbols[3][2] == rolledSymbols[4][1]) {
+            comboCounter++;
+            wertChecker += rolledSymbols[3][2];
+            winningSym[3][2] = true;
+            winningSym[4][1] = true;
+        }
+        if (finalMultiplier < multiplier(comboCounter, wertChecker)) {
+            finalMultiplier = multiplier(comboCounter, wertChecker);
+            finalWS = boolDeepClone(winningSym);
+        }
+        //endregion
+
         visualizeArray(rolledSymbols, finalWS);
         return finalMultiplier;     //highest multiplier gets returned, rest falls away
     }
-    
+
     public static int multiplier(int comboCounter, int wertChecker) {
         if (comboCounter == 1 && wertChecker == 6 || comboCounter == 1 && wertChecker == 7) {
             return 1;
@@ -323,7 +490,7 @@ public class BoR {
         }
         return 0;
     }   //gets combo and worth, determines the multiplier
-    
+
     public static int[][] createArray() {
         int[][] rolledSymbols = new int[5][3];
         for (int i = 0; i < rolledSymbols.length; i++) {
@@ -353,7 +520,7 @@ public class BoR {
                     rolledSymbols[i][j] = 10;
                 }
             }
-            
+
         }
        /*rolledSymbols[0][0] = 3;      //Debugging purposes
         rolledSymbols[1][0] = 3;
@@ -372,7 +539,7 @@ public class BoR {
         rolledSymbols[4][2] = 4;*/
         return rolledSymbols;
     } //2d int array random values 1-9
-    
+
     public static void visualizeArray(int[][] rolledSymbols, boolean[][] finalWS) {
         for (int i = 0; i < rolledSymbols[i].length; i++) {
             for (int j = 0; j < rolledSymbols.length; j++) {
@@ -419,28 +586,32 @@ public class BoR {
             System.out.println();
         }
     } //prints array | replaces values with respective card names
-    
+
     public static void resetBool(boolean[][] winningSym) {
-        
+
         for (boolean[] row : winningSym) {
             Arrays.fill(row, false);
         }
     }   //resets bool array to all false
-    
+
     public static boolean[][] boolDeepClone(boolean[][] winningSym) {
         boolean[][] finalWS;
-        
+
         finalWS = winningSym.clone();
         for (int i = 0; i < finalWS.length; i++) {
             finalWS[i] = winningSym[i].clone();
         }
         return finalWS;
     } //clones 2d bool array
-    
+
     public static void welcomeMsg(int credit, BoR currentGame, int spincounter) {
         System.out.println(spincounter);
-        System.out.println("Write " + cColor.CYAN + "\"spin\"" + cColor.RESET + " to play, " + cColor.YELLOW + "\"stake\"" + cColor.RESET + " to change your stake and " +
-                cColor.RED + "\"stop\"" + cColor.RESET + " to stop!");
-        System.out.println("current credit: " + cColor.CYAN + credit + cColor.RESET + "\ncurrent stake: " + cColor.YELLOW + currentGame.stake + cColor.RESET);
+        System.out.println(
+                "Write " + cColor.CYAN + "\"spin\"" + cColor.RESET + " to play, " + cColor.YELLOW + "\"stake\"" +
+                        cColor.RESET + " to change your stake and " +
+                        cColor.RED + "\"stop\"" + cColor.RESET + " to stop!");
+        System.out.println(
+                "current credit: " + cColor.CYAN + credit + cColor.RESET + "\ncurrent stake: " + cColor.YELLOW +
+                        currentGame.stake + cColor.RESET);
     } //display current stake and credit
 }
