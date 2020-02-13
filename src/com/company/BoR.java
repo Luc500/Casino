@@ -439,7 +439,8 @@ public class BoR {
     
     public static void welcomeMsg(int credit, BoR currentGame, int spincounter) {
         System.out.println(spincounter);
-        System.out.println("Write " + cColor.CYAN + "\"spin\"" + cColor.RESET + " to play, " + cColor.YELLOW + "\"stake\"" + cColor.RESET + " to change your stake and " + cColor.RED + "\"stop\"" + cColor.RESET + " to stop!");
+        System.out.println("Write " + cColor.CYAN + "\"spin\"" + cColor.RESET + " to play, " + cColor.YELLOW + "\"stake\"" + cColor.RESET + " to change your stake and " +
+                cColor.RED + "\"stop\"" + cColor.RESET + " to stop!");
         System.out.println("current credit: " + cColor.CYAN + credit + cColor.RESET + "\ncurrent stake: " + cColor.YELLOW + currentGame.stake + cColor.RESET);
     } //display current stake and credit
 }
